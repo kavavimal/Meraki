@@ -1,7 +1,0 @@
-{
-    "_id" : ObjectId("6188db5ef14de5ca1e1937ee"),
-    "leaveLimit" : NumberInt(14),
-    "__v" : NumberInt(0),
-    "createdAt" : ISODate("2022-11-29T04:00:14.308+0000"),
-    "updatedAt" : ISODate("2022-11-29T04:00:14.308+0000")
-}
