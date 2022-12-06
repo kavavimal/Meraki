@@ -15,6 +15,9 @@ db.attendance = require("./attendance.model");
 db.expenses = require("./expenses.model");
 db.leave = require("./leave.model");
 db.setting = require("./setting.model");
+db.payslip = require("./payslip.model");
+db.userDocument = require("./user-document.model");
+db.policy = require("./policy.model");
 
 exports.db = db;
 

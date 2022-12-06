@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
         const data = jwt.verify(token, secret);
 
         const user = await UserService.getUserById(data.id);
-
+        // console.log(user)
         if (!user) {
             return res.status(500).send({
                 message: "Unable to access feature. Please login again!"

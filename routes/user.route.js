@@ -22,6 +22,9 @@ module.exports = (app) => {
     router.get("/", user.fetchAllUsers);
     router.post("/", upload, user.createUser);
     router.get("/profile", user.fetchLoggedInUser);
+    router.get("/payslips", user.getPaySlipByUserId);
+    router.get("/policies", user.getUserPolicies);
+    router.get("/documents", user.getUserDocumentByUserId);
     router.get("/:id", user.fetchUserById);
     router.patch("/:id", upload, user.updateUser);
     router.delete("/:id", user.deleteUser);

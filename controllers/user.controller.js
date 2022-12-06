@@ -1,9 +1,13 @@
 'use strict';
 
+const policyService = require("../services/policy.service");
+
 const bcrypt = require("bcryptjs");
 const UserService = require("../services/user.service");
 const { USERS } = require("../data/default");
 const fs = require('fs');
+const userDocumentService = require("../services/user-document.service");
+const paySlipService = require("../services/payslip.service");
 
 exports.createDefaultUsers = async () => {
     const users = await UserService.getUsersByQuery({});
@@ -168,4 +172,62 @@ exports.deleteUser = async (req, res) => {
     return res.status(200).send({
         message: "Successfully proceed data."
     });
+}
+
+exports.getPaySlipByUserId = async (req, res) => {
+    const {page = 1, limit = 10,} = req.query;
+    try {
+        const paySlips = await paySlipService.getPaySlipByUserId(req.user, page, limit);
+        if (!paySlips.length) return res.status(200).json({
+            status: res.statusCode,
+            data: [],
+            message: 'Payslips not found.'
+        });
+        return res.status(200).json({
+            status: res.statusCode,
+            data: paySlips,
+            message: 'PaySlips retrieve successfully'
+        });
+    } catch (error) {
+        return res.status(500).json({status: res.statusCode, data: [], message: error.message});
+    }
+}
+
+
+exports.getUserDocumentByUserId = async (req, res) => {
+    const {page = 1, limit = 10,} = req.query;
+    try {
+        const userDocuments = await userDocumentService.getUserDocumentByUserId(req.user, page, limit);
+        if (!userDocuments.length) return res.status(200).json({
+            status: res.statusCode,
+            data: [],
+            message: 'User documents not found.'
+        });
+        return res.status(200).json({
+            status: res.statusCode,
+            data: userDocuments,
+            message: 'User documents retrieve successfully'
+        });
+    } catch (error) {
+        return res.status(500).json({status: res.statusCode, data: [], message: error.message});
+    }
+}
+
+exports.getUserPolicies = async (req, res) => {
+    const {page = 1, limit = 10,} = req.query;
+    try {
+        const policies = await policyService.fetchAll(page, limit);
+        if (!policies.length) return res.status(200).json({
+            status: res.statusCode,
+            data: [],
+            message: 'Policies not found.'
+        });
+        return res.status(200).json({
+            status: res.statusCode,
+            data: policies,
+            message: 'Policies retrieve successfully'
+        });
+    } catch (error) {
+        return res.status(500).json({status: res.statusCode, data: [], message: error.message});
+    }
 }

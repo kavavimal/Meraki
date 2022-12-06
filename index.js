@@ -7,11 +7,7 @@ const morgan = require("morgan");
 dotenv.config();
 
 app.use(cors());
-app.use(express.json());
-
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
-
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
@@ -19,43 +15,59 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.use(express.json());
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+
 app.use('/uploads', express.static('uploads'));
 
-// Database Connection
-const db = require("./models");
-db.connectDatabase()
-    .then(() => console.log("Database connected!"))
-    .catch((err) => console.log("Database connection failed! " + err.toString()));
+const main = () => {
+    try {
+        // Database Connection
+        const db = require("./models");
+        db.connectDatabase()
+            .then(() => console.log("Database connected!"))
+            .catch((err) => console.log("Database connection failed! " + err.toString()));
 
-// Define default data
-const SettingController = require('./controllers/setting.controller');
-SettingController.createDefaultSetting();
+        // Define default data
+        const SettingController = require('./controllers/setting.controller');
+        SettingController.createDefaultSetting();
 
-const DepartmentController = require('./controllers/department.controller');
-DepartmentController.createDefaultDepartments();
+        const DepartmentController = require('./controllers/department.controller');
+        DepartmentController.createDefaultDepartments();
 
-const DesignationController = require('./controllers/designation.controller');
-DesignationController.createDefaultDesignations();
+        const DesignationController = require('./controllers/designation.controller');
+        DesignationController.createDefaultDesignations();
 
-const UserController = require("./controllers/user.controller");
-UserController.createDefaultUsers();
+        const UserController = require("./controllers/user.controller");
+        UserController.createDefaultUsers();
 
-// Public routes
-require("./routes/auth.route")(app);
+        // Public routes
+        require("./routes/auth.route")(app);
 
-// Private routes
-app.use("/api*", require('./middlewares/auth.middleware'));
+        // Private routes
+        app.use("/api*", require('./middlewares/auth.middleware'));
 
-require("./routes/department.route")(app);
-require("./routes/designation.route")(app);
-require("./routes/user.route")(app);
-require("./routes/attendance.route")(app);
-require("./routes/expenses.route")(app);
-require("./routes/leave.route")(app);
-require("./routes/setting.route")(app);
+        require("./routes/department.route")(app);
+        require("./routes/designation.route")(app);
+        require("./routes/user.route")(app);
+        require("./routes/attendance.route")(app);
+        require("./routes/expenses.route")(app);
+        require("./routes/leave.route")(app);
+        require("./routes/setting.route")(app);
+        require("./routes/payslip.route")(app);
+        require("./routes/user-document.route")(app);
+        require("./routes/policy.route")(app);
 
-const port = process.env.PORT || 5000;
 
-app.listen(port, () => {
-    console.log(`Backend server is running on ${port}!`);
-});
+        const port = process.env.PORT || 5000;
+
+        app.listen(port, () => {
+            console.log(`Backend server is running on ${port}!`);
+        });
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+main();
